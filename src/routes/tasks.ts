@@ -16,24 +16,20 @@ router.get("/", async (req : Request, res : Response) => {
 
   const filterQuery = req.body;
 
-  try {
-    const tasks: ITask[] = await Task.findAll({
-      raw: true,
-      offset: filterQuery.page * 5,
-      limit: 5,
-      where: {
-        title: {
-          [Op.like]: "%" + filterQuery.filter_by_title + "%",
-        },
-        completed: filterQuery.completed,
+  const tasks: ITask[] = await Task.findAll({
+    raw: true,
+    offset: filterQuery.page * 5,
+    limit: 5,
+    where: {
+      title: {
+        [Op.like]: "%" + filterQuery.filter_by_title + "%",
       },
-      order: [["dueDate", filterQuery.sort_by_date.toUpperCase()]],
-    });
+      completed: filterQuery.completed,
+    },
+    order: [["dueDate", filterQuery.sort_by_date.toUpperCase()]],
+  });
 
-    res.status(200).json(tasks);
-  } catch (err) {
-    res.send(err);
-  }
+  res.status(200).json(tasks);
 });
 
 router.post("/", async (req : Request, res : Response) => {
@@ -56,7 +52,7 @@ router.post("/", async (req : Request, res : Response) => {
     res.status(200).json(task);
   } catch (err) {
     res.send(err);
-  }
+  } 
 });
 
 router.put("/:id", async (req : Request, res : Response) => {
@@ -70,23 +66,16 @@ router.put("/:id", async (req : Request, res : Response) => {
   const { error } = putSchema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  try {
-    let task: ITask = await Task.findOne({
+    const task: ITask = await Task.findOne({
       raw: true,
       where: { id: req.params.id },
     })
 
     await Task.update(
       {
-        title: req.body.title ? req.body.title : task.title,
-        dueDate: req.body.dueDate
-          ? req.body.dueDate
-          : task.dueDate,
-
-        //bug - if req.body.completed: false 
-        completed: req.body.completed
-          ? req.body.completed
-          : task.completed,
+        title: req.body.title ?? task.title,
+        dueDate: req.body.dueDate ?? task.dueDate,
+        completed: req.body.completed ?? task.completed,
       },
       {
         where: {
@@ -96,9 +85,6 @@ router.put("/:id", async (req : Request, res : Response) => {
     )
 
     res.status(200).json(`Task with id ${req.params.id} is updated`);
-  } catch (err) {
-    res.send(err);
-  }
 });
 
 router.delete("/:id", async (req : Request, res : Response) => {

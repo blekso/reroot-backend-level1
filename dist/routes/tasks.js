@@ -45,7 +45,7 @@ var tasks_1 = require("../schemas/tasks");
 var sequelize_1 = require("sequelize");
 var router = express_1.default.Router();
 router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error, filterQuery, tasks, err_1;
+    var error, filterQuery, tasks;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -54,9 +54,6 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
                 filterQuery = req.body;
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Task_1.Task.findAll({
                         raw: true,
                         offset: filterQuery.page * 5,
@@ -69,20 +66,15 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                         },
                         order: [["dueDate", filterQuery.sort_by_date.toUpperCase()]],
                     })];
-            case 2:
+            case 1:
                 tasks = _b.sent();
                 res.status(200).json(tasks);
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _b.sent();
-                res.send(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error, task, err_2;
+    var error, task, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -102,58 +94,46 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 res.status(200).json(task);
                 return [3 /*break*/, 4];
             case 3:
-                err_2 = _a.sent();
-                res.send(err_2);
+                err_1 = _a.sent();
+                res.send(err_1);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); });
 router.put("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error, task, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var error, task;
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 error = tasks_1.putSchema.validate(req.body).error;
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, Task_1.Task.findOne({
                         raw: true,
                         where: { id: req.params.id },
                     })];
-            case 2:
-                task = _a.sent();
+            case 1:
+                task = _d.sent();
                 return [4 /*yield*/, Task_1.Task.update({
-                        title: req.body.title ? req.body.title : task.title,
-                        dueDate: req.body.dueDate
-                            ? req.body.dueDate
-                            : task.dueDate,
-                        //bug - if req.body.completed: false 
-                        completed: req.body.completed
-                            ? req.body.completed
-                            : task.completed,
+                        title: (_a = req.body.title) !== null && _a !== void 0 ? _a : task.title,
+                        dueDate: (_b = req.body.dueDate) !== null && _b !== void 0 ? _b : task.dueDate,
+                        completed: (_c = req.body.completed) !== null && _c !== void 0 ? _c : task.completed,
                     }, {
                         where: {
                             id: req.params.id,
                         },
                     })];
-            case 3:
-                _a.sent();
+            case 2:
+                _d.sent();
                 res.status(200).json("Task with id " + req.params.id + " is updated");
-                return [3 /*break*/, 5];
-            case 4:
-                err_3 = _a.sent();
-                res.send(err_3);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });
 router.delete("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var err_4;
+    var err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -168,8 +148,8 @@ router.delete("/:id", function (req, res) { return __awaiter(void 0, void 0, voi
                 res.status(200).json("Task with id " + req.params.id + " is deleted");
                 return [3 /*break*/, 3];
             case 2:
-                err_4 = _a.sent();
-                res.send(err_4);
+                err_2 = _a.sent();
+                res.send(err_2);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

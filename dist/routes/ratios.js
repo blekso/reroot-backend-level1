@@ -43,10 +43,9 @@ var Task_1 = require("../models/Task");
 var express_1 = __importDefault(require("express"));
 var ratios_1 = require("../schemas/ratios");
 var sequelize_1 = require("sequelize");
-var utils_1 = require("../utils/utils");
 var router = express_1.default.Router();
 router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error, filterQuery, tasks, validTasks_1, date_1, err_1, tasks, tasks, err_2;
+    var error, filterQuery, tasks, validTasks_1, tasks, tasks;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -55,75 +54,51 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
                 filterQuery = req.body;
-                if (!filterQuery.get_productivity_ratio) return [3 /*break*/, 5];
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 3, , 4]);
+                if (!filterQuery.get_productivity_ratio) return [3 /*break*/, 2];
                 return [4 /*yield*/, Task_1.Task.findAll({
                         raw: true
                     })];
-            case 2:
+            case 1:
                 tasks = _b.sent();
                 validTasks_1 = 0;
-                date_1 = new Date();
                 tasks.forEach(function (el) {
-                    if ((el.dueDate <= date_1 && el.completed) ||
-                        el.completed) {
+                    if (el.completed)
                         validTasks_1++;
-                    }
                 });
                 res
                     .status(200)
-                    .json("Ratio of completed tasks in their due date is: " +
-                    validTasks_1 / tasks.length);
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _b.sent();
-                res.send(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [3 /*break*/, 11];
-            case 5:
-                _b.trys.push([5, 10, , 11]);
-                if (!filterQuery.expired) return [3 /*break*/, 7];
+                    .json("Ratio of completed tasks in their due date is: " + validTasks_1 / tasks.length);
+                return [3 /*break*/, 6];
+            case 2:
+                if (!filterQuery.expired) return [3 /*break*/, 4];
                 return [4 /*yield*/, Task_1.Task.findAll({
                         raw: true,
                         where: {
                             completed: filterQuery.completed,
                             dueDate: (_a = {},
-                                _a[sequelize_1.Op.lte] = (0, utils_1.getDate)(),
+                                _a[sequelize_1.Op.lte] = new Date(),
                                 _a),
                         },
                     })];
-            case 6:
+            case 3:
                 tasks = _b.sent();
                 res
                     .status(200)
-                    .json("Number of expired tasks which are set to completed: " +
-                    filterQuery.completed +
-                    " equals to: " +
-                    tasks.length);
-                return [3 /*break*/, 9];
-            case 7: return [4 /*yield*/, Task_1.Task.findAll({
+                    .json("Number of expired tasks which are set to completed: " + filterQuery.completed + " equals to: " + tasks.length);
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, Task_1.Task.findAll({
                     raw: true,
                     where: {
                         completed: filterQuery.completed,
                     },
                 })];
-            case 8:
+            case 5:
                 tasks = _b.sent();
                 res
                     .status(200)
-                    .json("Number of tasks which are set to completed: " +
-                    filterQuery.completed +
-                    " equals to: " +
-                    tasks.length);
-                _b.label = 9;
-            case 9: return [3 /*break*/, 11];
-            case 10:
-                err_2 = _b.sent();
-                res.send(err_2);
-                return [3 /*break*/, 11];
-            case 11: return [2 /*return*/];
+                    .json("Number of tasks which are set to completed: " + filterQuery.completed + "  equals to: " + tasks.length);
+                _b.label = 6;
+            case 6: return [2 /*return*/];
         }
     });
 }); });
