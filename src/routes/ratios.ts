@@ -15,17 +15,17 @@ function getDate() : string {
 
 router.get("/", async (req : Request, res : Response) => {
   /*
-  completed: false,
-  expired: false,
-  get_productivity_ratio: false
+  "completed": false,
+  "expired": false,
+  "get_productivity_ratio": false
    */
 
-  const schama = Joi.object({
+  const schema = Joi.object({
     completed: Joi.boolean().required(),
     expired: Joi.boolean().required(),
     get_productivity_ratio: Joi.boolean().required(),
   });
-  const { error } = schama.validate(req.query);
+  const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const filterQuery = req.body;

@@ -11,13 +11,13 @@ router.get("/", async (req : Request, res : Response) => {
   "page": 0,
   "filter_by_title": ""*/
 
-  const schama = Joi.object({
+  const schema = Joi.object({
     completed: Joi.boolean(),
     sort_by_date: Joi.string().max(4).required(),
     page: Joi.number().required(),
     filter_by_title: Joi.string().empty("").default("default value"),
   });
-  const { error } = schama.validate(req.body);
+  const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const filterQuery = req.body;
@@ -47,12 +47,12 @@ router.post("/", async (req : Request, res : Response) => {
   completed: false 
     */
 
-  const schama = Joi.object({
+  const schema = Joi.object({
     title: Joi.string().min(3).max(255).required(),
     dueDate: Joi.string().max(10).required(),
     completed: Joi.boolean().required(),
   });
-  const { error } = schama.validate(req.body);
+  const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
@@ -67,26 +67,25 @@ router.post("/", async (req : Request, res : Response) => {
   }
 });
 
-router.put("/", async (req : Request, res : Response) => {
+router.put("/:id", async (req : Request, res : Response) => {
   /*
-  "id": 4,
+   /:id, -> in url
   "title": "zad4",
   "dueDate": "2022-05-21",
   "completed": false,
   */
-
-  const schama = Joi.object({
-    id: Joi.number().required(),
+ 
+  const schema = Joi.object({
     title: Joi.string().min(3).max(255),
     dueDate: Joi.string().max(10),
     completed: Joi.boolean(),
   });
-  const { error } = schama.validate(req.body);
+  const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
     Task.findAll({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     })
       .then((task) => {
         console.log(task[0].dataValues);
@@ -102,12 +101,12 @@ router.put("/", async (req : Request, res : Response) => {
           },
           {
             where: {
-              id: req.body.id,
+              id: req.params.id,
             },
           }
         )
           .then((result) => {
-            res.status(200).json(`Task with id ${req.body.id} is updated`);
+            res.status(200).json(`Task with id ${req.params.id} is updated`);
           })
           .catch((err) => {
             res.send(err);
@@ -121,23 +120,17 @@ router.put("/", async (req : Request, res : Response) => {
   }
 });
 
-router.delete("/", async (req : Request, res : Response) => {
-  /* id: 1 */
-
-  const schama = Joi.object({
-    id: Joi.number().required(),
-  });
-  const { error } = schama.validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.delete("/:id", async (req : Request, res : Response) => {
+  /*  /:id -> in url */ 
 
   try {
     Task.destroy({
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     })
       .then((result) => {
-        res.status(200).json(`Task with id ${req.body.id} is deleted`);
+        res.status(200).json(`Task with id ${req.params.id} is deleted`);
       })
       .catch((err) => {
         res.send(err);
