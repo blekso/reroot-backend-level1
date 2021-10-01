@@ -18,6 +18,7 @@ router.get("/", async (req : Request, res : Response) => {
 
   try {
     const tasks: ITask[] = await Task.findAll({
+      raw: true,
       offset: filterQuery.page * 5,
       limit: 5,
       where: {
@@ -28,6 +29,7 @@ router.get("/", async (req : Request, res : Response) => {
       },
       order: [["dueDate", filterQuery.sort_by_date.toUpperCase()]],
     });
+
     res.status(200).json(tasks);
   } catch (err) {
     res.send(err);
@@ -69,36 +71,31 @@ router.put("/:id", async (req : Request, res : Response) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    Task.findAll({
+    let task: ITask = await Task.findOne({
+      raw: true,
       where: { id: req.params.id },
     })
-      .then((task: ITask) => {
-        Task.update(
-          {
-            title: req.body.title ? req.body.title : task[0].dataValues.title,
-            dueDate: req.body.dueDate
-              ? req.body.dueDate
-              : task[0].dataValues.dueDate,
-            completed: req.body.completed
-              ? req.body.completed
-              : task[0].dataValues.completed,
-          },
-          {
-            where: {
-              id: req.params.id,
-            },
-          }
-        )
-          .then((result) => {
-            res.status(200).json(`Task with id ${req.params.id} is updated`);
-          })
-          .catch((err) => {
-            res.send(err);
-          });
-      })
-      .catch((err) => {
-        res.send(err);
-      });
+
+    await Task.update(
+      {
+        title: req.body.title ? req.body.title : task.title,
+        dueDate: req.body.dueDate
+          ? req.body.dueDate
+          : task.dueDate,
+
+        //bug - if req.body.completed: false 
+        completed: req.body.completed
+          ? req.body.completed
+          : task.completed,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    )
+
+    res.status(200).json(`Task with id ${req.params.id} is updated`);
   } catch (err) {
     res.send(err);
   }
@@ -108,17 +105,13 @@ router.delete("/:id", async (req : Request, res : Response) => {
   /*  /:id -> in url */ 
 
   try {
-    Task.destroy({
+    await Task.destroy({
       where: {
         id: req.params.id,
       },
     })
-      .then((result) => {
-        res.status(200).json(`Task with id ${req.params.id} is deleted`);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
+
+    res.status(200).json(`Task with id ${req.params.id} is deleted`);
   } catch (err) {
     res.send(err);
   }

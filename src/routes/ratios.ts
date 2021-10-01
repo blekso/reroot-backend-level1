@@ -18,7 +18,9 @@ router.get("/", async (req : Request, res : Response) => {
   const filterQuery = req.body;
   if (filterQuery.get_productivity_ratio) {
     try {
-      const tasks: ITask[] = await Task.findAll();
+      const tasks: ITask[] = await Task.findAll({
+        raw: true
+      });
       let validTasks: number = 0;
       const date = new Date();
 
@@ -43,6 +45,7 @@ router.get("/", async (req : Request, res : Response) => {
     try {
       if (filterQuery.expired) {
         const tasks: ITask[] = await Task.findAll({
+          raw: true,
           where: {
             completed: filterQuery.completed,
             dueDate: {
@@ -60,6 +63,7 @@ router.get("/", async (req : Request, res : Response) => {
           );
       } else {
         const tasks: ITask[] = await Task.findAll({
+          raw: true,
           where: {
             completed: filterQuery.completed,
           },

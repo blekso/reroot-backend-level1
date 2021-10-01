@@ -17,7 +17,7 @@ exports.getSchema = joi_1.default.object({
     filter_by_title: joi_1.default.string().empty("").default("default value"),
 });
 exports.putSchema = joi_1.default.object({
-    title: joi_1.default.string().min(3).max(255),
+    title: joi_1.default.string().max(255),
     dueDate: joi_1.default.string().max(10),
     completed: joi_1.default.boolean(),
 });

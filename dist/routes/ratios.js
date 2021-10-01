@@ -59,7 +59,9 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, Task_1.Task.findAll()];
+                return [4 /*yield*/, Task_1.Task.findAll({
+                        raw: true
+                    })];
             case 2:
                 tasks = _b.sent();
                 validTasks_1 = 0;
@@ -84,6 +86,7 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 _b.trys.push([5, 10, , 11]);
                 if (!filterQuery.expired) return [3 /*break*/, 7];
                 return [4 /*yield*/, Task_1.Task.findAll({
+                        raw: true,
                         where: {
                             completed: filterQuery.completed,
                             dueDate: (_a = {},
@@ -101,6 +104,7 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                     tasks.length);
                 return [3 /*break*/, 9];
             case 7: return [4 /*yield*/, Task_1.Task.findAll({
+                    raw: true,
                     where: {
                         completed: filterQuery.completed,
                     },

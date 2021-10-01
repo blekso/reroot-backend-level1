@@ -14,7 +14,7 @@ export const getSchema = Joi.object({
   });
 
 export const putSchema = Joi.object({
-    title: Joi.string().min(3).max(255),
+    title: Joi.string().max(255),
     dueDate: Joi.string().max(10),
     completed: Joi.boolean(),
  });

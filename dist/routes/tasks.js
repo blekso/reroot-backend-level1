@@ -58,6 +58,7 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 1:
                 _b.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Task_1.Task.findAll({
+                        raw: true,
                         offset: filterQuery.page * 5,
                         limit: 5,
                         where: {
@@ -109,66 +110,69 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); });
 router.put("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error;
+    var error, task, err_3;
     return __generator(this, function (_a) {
-        error = tasks_1.putSchema.validate(req.body).error;
-        if (error)
-            return [2 /*return*/, res.status(400).send(error.details[0].message)];
-        try {
-            Task_1.Task.findAll({
-                where: { id: req.params.id },
-            })
-                .then(function (task) {
-                Task_1.Task.update({
-                    title: req.body.title ? req.body.title : task[0].dataValues.title,
-                    dueDate: req.body.dueDate
-                        ? req.body.dueDate
-                        : task[0].dataValues.dueDate,
-                    completed: req.body.completed
-                        ? req.body.completed
-                        : task[0].dataValues.completed,
-                }, {
-                    where: {
-                        id: req.params.id,
-                    },
-                })
-                    .then(function (result) {
-                    res.status(200).json("Task with id " + req.params.id + " is updated");
-                })
-                    .catch(function (err) {
-                    res.send(err);
-                });
-            })
-                .catch(function (err) {
-                res.send(err);
-            });
+        switch (_a.label) {
+            case 0:
+                error = tasks_1.putSchema.validate(req.body).error;
+                if (error)
+                    return [2 /*return*/, res.status(400).send(error.details[0].message)];
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, Task_1.Task.findOne({
+                        raw: true,
+                        where: { id: req.params.id },
+                    })];
+            case 2:
+                task = _a.sent();
+                return [4 /*yield*/, Task_1.Task.update({
+                        title: req.body.title ? req.body.title : task.title,
+                        dueDate: req.body.dueDate
+                            ? req.body.dueDate
+                            : task.dueDate,
+                        //bug - if req.body.completed: false 
+                        completed: req.body.completed
+                            ? req.body.completed
+                            : task.completed,
+                    }, {
+                        where: {
+                            id: req.params.id,
+                        },
+                    })];
+            case 3:
+                _a.sent();
+                res.status(200).json("Task with id " + req.params.id + " is updated");
+                return [3 /*break*/, 5];
+            case 4:
+                err_3 = _a.sent();
+                res.send(err_3);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
-        catch (err) {
-            res.send(err);
-        }
-        return [2 /*return*/];
     });
 }); });
 router.delete("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var err_4;
     return __generator(this, function (_a) {
-        /*  /:id -> in url */
-        try {
-            Task_1.Task.destroy({
-                where: {
-                    id: req.params.id,
-                },
-            })
-                .then(function (result) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, Task_1.Task.destroy({
+                        where: {
+                            id: req.params.id,
+                        },
+                    })];
+            case 1:
+                _a.sent();
                 res.status(200).json("Task with id " + req.params.id + " is deleted");
-            })
-                .catch(function (err) {
-                res.send(err);
-            });
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res.send(err_4);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (err) {
-            res.send(err);
-        }
-        return [2 /*return*/];
     });
 }); });
 module.exports = router;
