@@ -1,17 +1,9 @@
-import {Task} from '../models/Task'
+import {Task, ITask} from '../models/Task'
 import express, {Request, Response} from 'express'
-import Joi from 'joi'
+import {getSchema} from '../schemas/ratios'
 import {Op} from 'sequelize'
+import {getDate} from '../utils/utils'
 const router = express.Router();
-
-function getDate() : string {
-  let d = new Date();
-  let yyyy = d.getFullYear();
-  let mm = d.getMonth() + 1;
-  let dd = d.getDate();
-
-  return `${yyyy}-${mm}-${dd}`;
-}
 
 router.get("/", async (req : Request, res : Response) => {
   /*
@@ -20,30 +12,24 @@ router.get("/", async (req : Request, res : Response) => {
   "get_productivity_ratio": false
    */
 
-  const schema = Joi.object({
-    completed: Joi.boolean().required(),
-    expired: Joi.boolean().required(),
-    get_productivity_ratio: Joi.boolean().required(),
-  });
-  const { error } = schema.validate(req.body);
+  const { error } = getSchema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const filterQuery = req.body;
   if (filterQuery.get_productivity_ratio) {
     try {
-      const tasks = await Task.findAll();
-      let validTasks = 0;
+      const tasks: ITask[] = await Task.findAll();
+      let validTasks: number = 0;
       const date = new Date();
 
       tasks.forEach((el) => {
         if (
-          (el.dataValues.dueDate <= date && el.dataValues.completed) ||
-          el.dataValues.completed
+          (el.dueDate <= date && el.completed) ||
+          el.completed
         ) {
           validTasks++;
         }
       });
-
       res
         .status(200)
         .json(
@@ -56,7 +42,7 @@ router.get("/", async (req : Request, res : Response) => {
   } else {
     try {
       if (filterQuery.expired) {
-        const tasks = await Task.findAll({
+        const tasks: ITask[] = await Task.findAll({
           where: {
             completed: filterQuery.completed,
             dueDate: {
@@ -73,7 +59,7 @@ router.get("/", async (req : Request, res : Response) => {
               tasks.length
           );
       } else {
-        const tasks = await Task.findAll({
+        const tasks: ITask[] = await Task.findAll({
           where: {
             completed: filterQuery.completed,
           },

@@ -41,22 +41,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var Task_1 = require("../models/Task");
-var joi_1 = __importDefault(require("joi"));
+var tasks_1 = require("../schemas/tasks");
 var sequelize_1 = require("sequelize");
 var router = express_1.default.Router();
 router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var schama, error, filterQuery, tasks, err_1;
+    var error, filterQuery, tasks, err_1;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                schama = joi_1.default.object({
-                    completed: joi_1.default.boolean(),
-                    sort_by_date: joi_1.default.string().max(4).required(),
-                    page: joi_1.default.number().required(),
-                    filter_by_title: joi_1.default.string().empty("").default("default value"),
-                });
-                error = schama.validate(req.body).error;
+                error = tasks_1.getSchema.validate(req.body).error;
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
                 filterQuery = req.body;
@@ -87,16 +81,11 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var schama, error, task, err_2;
+    var error, task, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                schama = joi_1.default.object({
-                    title: joi_1.default.string().min(3).max(255).required(),
-                    dueDate: joi_1.default.string().max(10).required(),
-                    completed: joi_1.default.boolean().required(),
-                });
-                error = schama.validate(req.body).error;
+                error = tasks_1.postSchema.validate(req.body).error;
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
                 _a.label = 1;
@@ -119,24 +108,17 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); });
-router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var schama, error;
+router.put("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var error;
     return __generator(this, function (_a) {
-        schama = joi_1.default.object({
-            id: joi_1.default.number().required(),
-            title: joi_1.default.string().min(3).max(255),
-            dueDate: joi_1.default.string().max(10),
-            completed: joi_1.default.boolean(),
-        });
-        error = schama.validate(req.body).error;
+        error = tasks_1.putSchema.validate(req.body).error;
         if (error)
             return [2 /*return*/, res.status(400).send(error.details[0].message)];
         try {
             Task_1.Task.findAll({
-                where: { id: req.body.id },
+                where: { id: req.params.id },
             })
                 .then(function (task) {
-                console.log(task[0].dataValues);
                 Task_1.Task.update({
                     title: req.body.title ? req.body.title : task[0].dataValues.title,
                     dueDate: req.body.dueDate
@@ -147,11 +129,11 @@ router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                         : task[0].dataValues.completed,
                 }, {
                     where: {
-                        id: req.body.id,
+                        id: req.params.id,
                     },
                 })
                     .then(function (result) {
-                    res.status(200).json("Task with id " + req.body.id + " is updated");
+                    res.status(200).json("Task with id " + req.params.id + " is updated");
                 })
                     .catch(function (err) {
                     res.send(err);
@@ -167,23 +149,17 @@ router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
         return [2 /*return*/];
     });
 }); });
-router.delete("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var schama, error;
+router.delete("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        schama = joi_1.default.object({
-            id: joi_1.default.number().required(),
-        });
-        error = schama.validate(req.body).error;
-        if (error)
-            return [2 /*return*/, res.status(400).send(error.details[0].message)];
+        /*  /:id -> in url */
         try {
             Task_1.Task.destroy({
                 where: {
-                    id: req.body.id,
+                    id: req.params.id,
                 },
             })
                 .then(function (result) {
-                res.status(200).json("Task with id " + req.body.id + " is deleted");
+                res.status(200).json("Task with id " + req.params.id + " is deleted");
             })
                 .catch(function (err) {
                 res.send(err);

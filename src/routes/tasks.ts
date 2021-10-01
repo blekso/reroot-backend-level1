@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express'
-import {Task} from '../models/Task'
-import Joi from 'joi'
+import {Task, ITask} from '../models/Task'
+import {postSchema, getSchema, putSchema} from '../schemas/tasks'
 import {Op} from 'sequelize'
 const router = express.Router();
 
@@ -11,19 +11,13 @@ router.get("/", async (req : Request, res : Response) => {
   "page": 0,
   "filter_by_title": ""*/
 
-  const schema = Joi.object({
-    completed: Joi.boolean(),
-    sort_by_date: Joi.string().max(4).required(),
-    page: Joi.number().required(),
-    filter_by_title: Joi.string().empty("").default("default value"),
-  });
-  const { error } = schema.validate(req.body);
+  const { error } = getSchema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const filterQuery = req.body;
 
   try {
-    const tasks = await Task.findAll({
+    const tasks: ITask[] = await Task.findAll({
       offset: filterQuery.page * 5,
       limit: 5,
       where: {
@@ -47,20 +41,16 @@ router.post("/", async (req : Request, res : Response) => {
   completed: false 
     */
 
-  const schema = Joi.object({
-    title: Joi.string().min(3).max(255).required(),
-    dueDate: Joi.string().max(10).required(),
-    completed: Joi.boolean().required(),
-  });
-  const { error } = schema.validate(req.body);
+  const { error } = postSchema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const task = await Task.create({
+    const task: ITask = await Task.create({
       title: req.body.title,
       dueDate: req.body.dueDate,
       completed: req.body.completed,
     });
+
     res.status(200).json(task);
   } catch (err) {
     res.send(err);
@@ -75,20 +65,14 @@ router.put("/:id", async (req : Request, res : Response) => {
   "completed": false,
   */
  
-  const schema = Joi.object({
-    title: Joi.string().min(3).max(255),
-    dueDate: Joi.string().max(10),
-    completed: Joi.boolean(),
-  });
-  const { error } = schema.validate(req.body);
+  const { error } = putSchema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
     Task.findAll({
       where: { id: req.params.id },
     })
-      .then((task) => {
-        console.log(task[0].dataValues);
+      .then((task: ITask) => {
         Task.update(
           {
             title: req.body.title ? req.body.title : task[0].dataValues.title,

@@ -41,28 +41,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Task_1 = require("../models/Task");
 var express_1 = __importDefault(require("express"));
-var joi_1 = __importDefault(require("joi"));
+var ratios_1 = require("../schemas/ratios");
 var sequelize_1 = require("sequelize");
+var utils_1 = require("../utils/utils");
 var router = express_1.default.Router();
-function getDate() {
-    var d = new Date();
-    var yyyy = d.getFullYear();
-    var mm = d.getMonth() + 1;
-    var dd = d.getDate();
-    return yyyy + "-" + mm + "-" + dd;
-}
 router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var schama, error, filterQuery, tasks, validTasks_1, date_1, err_1, tasks, tasks, err_2;
+    var error, filterQuery, tasks, validTasks_1, date_1, err_1, tasks, tasks, err_2;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                schama = joi_1.default.object({
-                    completed: joi_1.default.boolean().required(),
-                    expired: joi_1.default.boolean().required(),
-                    get_productivity_ratio: joi_1.default.boolean().required(),
-                });
-                error = schama.validate(req.query).error;
+                error = ratios_1.getSchema.validate(req.body).error;
                 if (error)
                     return [2 /*return*/, res.status(400).send(error.details[0].message)];
                 filterQuery = req.body;
@@ -76,8 +65,8 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 validTasks_1 = 0;
                 date_1 = new Date();
                 tasks.forEach(function (el) {
-                    if ((el.dataValues.dueDate <= date_1 && el.dataValues.completed) ||
-                        el.dataValues.completed) {
+                    if ((el.dueDate <= date_1 && el.completed) ||
+                        el.completed) {
                         validTasks_1++;
                     }
                 });
@@ -98,7 +87,7 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                         where: {
                             completed: filterQuery.completed,
                             dueDate: (_a = {},
-                                _a[sequelize_1.Op.lte] = getDate(),
+                                _a[sequelize_1.Op.lte] = (0, utils_1.getDate)(),
                                 _a),
                         },
                     })];
