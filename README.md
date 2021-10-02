@@ -46,9 +46,9 @@ App uses two main routes: /api/ratios (localhost:3000/api/ratios) which returns 
   "get_productivity_ratio": false
 }
 ```
-Completed: boolean - selects tasks with completed field set to same value 
-Expired: boolean - calculates which tasks' dueDates are in the past time
-GetProductivityRatio: boolean - returns the ratio of completed tasks in their dueDate
+Completed: boolean - selects tasks with completed field set to same value\ 
+Expired: boolean - calculates which tasks' dueDates are in the past time\
+GetProductivityRatio: boolean - returns the ratio of completed tasks in their dueDate\
 Values of fields are required and have to be combined!
 
 ## /api/tasks GET
@@ -60,10 +60,10 @@ Values of fields are required and have to be combined!
   "filter_by_title": ""
 }
 ```
-Completed: boolean - selects tasks with completed field set to same value
-SortByDate: string (desc/asc) - sorts tasks by their dueDates
-Page: number - pagination of 5 tasks per page
-FilterByTitle: string - filtering by name with LIKE %name% operator
+Completed: boolean - selects tasks with completed field set to same value\
+SortByDate: string (desc/asc) - sorts tasks by their dueDates\
+Page: number - pagination of 5 tasks per page\
+FilterByTitle: string - filtering by name with LIKE %name% operator\
 Values of fields are required and have to be combined!
 
 ## /api/tasks POST
@@ -85,8 +85,8 @@ Creates new task, all fields are required.
   "completed": false,
 }
 ```
-Updates fields which are set in req.body to the task with the same ID as in req.params.id
-Requires /:id as req.params.id
+Updates fields which are set in req.body to the task with the same ID as in req.params.id\
+Requires /:id as req.params.id\
 Atleast one field is needed in order to update the task successfully!
 
 ## /api/tasks DELETE
