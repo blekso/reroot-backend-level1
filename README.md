@@ -38,7 +38,7 @@ npm run start
 
 App uses two main routes: /api/ratios (localhost:3000/api/ratios) which returns ratios of tasks and /api/tasks (localhost:3000/api/tasks) which returns task objects.
 
-## /api/ratios GET
+#### /api/ratios GET
 ```
 {
   "completed": false,
@@ -46,12 +46,12 @@ App uses two main routes: /api/ratios (localhost:3000/api/ratios) which returns 
   "get_productivity_ratio": false
 }
 ```
-Completed: boolean - selects tasks with completed field set to same value\ 
+Completed: boolean - selects tasks with completed field set to same value\
 Expired: boolean - calculates which tasks' dueDates are in the past time\
 GetProductivityRatio: boolean - returns the ratio of completed tasks in their dueDate\
 Values of fields are required and have to be combined!
 
-## /api/tasks GET
+#### /api/tasks GET
 ```
 {
   "completed": false,
@@ -66,7 +66,7 @@ Page: number - pagination of 5 tasks per page\
 FilterByTitle: string - filtering by name with LIKE %name% operator\
 Values of fields are required and have to be combined!
 
-## /api/tasks POST
+#### /api/tasks POST
 ```
 {
   "title": "title",
@@ -76,7 +76,7 @@ Values of fields are required and have to be combined!
 ```
 Creates new task, all fields are required.  
 
-## /api/tasks PUT
+#### /api/tasks PUT
 ```
 /:id
 {
@@ -89,7 +89,7 @@ Updates fields which are set in req.body to the task with the same ID as in req.
 Requires /:id as req.params.id\
 Atleast one field is needed in order to update the task successfully!
 
-## /api/tasks DELETE
+#### /api/tasks DELETE
 Deletes task from table, requires /:id as req.params.id
 
 ### Author
