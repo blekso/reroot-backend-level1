@@ -1,13 +1,19 @@
 import express from 'express'
-import {sequelize} from './config/db'
+import {sequelize} from './db'
+import { queryParser } from 'express-query-parser'
 
 const app = express();
-const tasks = require("./routes/tasks");
-const ratios = require("./routes/ratios");
+import {router} from './routes'
 
 app.use(express.json());
-app.use("/api/tasks", tasks);
-app.use("/api/ratios", ratios);
+app.use(
+  queryParser({
+    parseNull: true,
+    parseBoolean: true,
+    parseNumber: true
+  })
+)
+app.use("/api", router);
 
 sequelize.sync().catch((err : Error) => {
   console.log(err);

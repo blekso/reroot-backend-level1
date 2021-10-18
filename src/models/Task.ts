@@ -1,4 +1,4 @@
-import {Sequelize, sequelize} from '../config/db'
+import { Sequelize, sequelize } from '../db'
 
 export interface ITask {
   id: number,
@@ -29,3 +29,4 @@ export const Task = sequelize.define("task", {
     allowNull: false,
   },
 });
+

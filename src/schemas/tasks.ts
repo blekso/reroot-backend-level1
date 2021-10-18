@@ -10,7 +10,7 @@ export const getSchema = Joi.object({
     completed: Joi.boolean(),
     sort_by_date: Joi.string().max(4).required(),
     page: Joi.number().required(),
-    filter_by_title: Joi.string().empty("").default("default value"),
+    filter_by_title: Joi.string()
   });
 
 export const putSchema = Joi.object({
