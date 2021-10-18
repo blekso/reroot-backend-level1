@@ -1,5 +1,4 @@
 import {Task} from '../models/task.model'
-import {ITask} from '../interfaces/task.interface'
 import {postSchema, getSchema, putSchema} from '../schemas/task.schema'
 import {Op} from 'sequelize'
 
@@ -20,7 +19,7 @@ export class TaskService {
     
     //error filter_by_title= cant be empty string
     
-        const tasks: ITask[] = await Task.findAll({
+        const tasks = await Task.findAll({
             raw: true,
             offset: filterQuery.page * 5,
             limit: 5,
@@ -39,7 +38,7 @@ export class TaskService {
      post = async (newTask: any) => {
     
         try {
-            const task: ITask = await Task.create({
+            const task = await Task.create({
                 title: newTask.title,
                 dueDate: newTask.dueDate,
                 completed: newTask.completed,
@@ -55,16 +54,16 @@ export class TaskService {
         //error filter_by_title= cant be empty string
         
         try{
-            const task: ITask = await Task.findOne({
+            const task = await Task.findOne({
                 raw: true,
                 where: { id: req.params.id },
               })
           
             await Task.update(
             {
-                title: req.body.title ?? task.title,
-                dueDate: req.body.dueDate ?? task.dueDate,
-                completed: req.body.completed ?? task.completed,
+                title: req.body.title ?? task!.title,
+                dueDate: req.body.dueDate ?? task!.dueDate,
+                completed: req.body.completed ?? task!.completed,
             },
             {
                 where: {

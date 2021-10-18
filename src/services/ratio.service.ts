@@ -1,5 +1,4 @@
 import {Task} from '../models/task.model'
-import {ITask} from '../interfaces/task.interface'
 import {getSchema} from '../schemas/ratio.schema'
 import {Op} from 'sequelize'
 
@@ -11,7 +10,7 @@ export class RatioService {
   get = async (filterQuery: any) => {
 
     if (filterQuery.get_productivity_ratio) {
-      const tasks: ITask[] = await Task.findAll({
+      const tasks= await Task.findAll({
         raw: true
       });
       let validTasks: number = 0;
@@ -22,7 +21,7 @@ export class RatioService {
       return `Ratio of completed tasks in their due date is: ${validTasks / tasks.length}`
     } else {
       if (filterQuery.expired) {
-        const tasks: ITask[] = await Task.findAll({
+        const tasks = await Task.findAll({
           raw: true,
           where: {
             completed: filterQuery.completed,
@@ -33,7 +32,7 @@ export class RatioService {
         });
       return `Number of expired tasks which are set to completed: ${filterQuery.completed} equals to: ${tasks.length}`
       } else {
-        const tasks: ITask[] = await Task.findAll({
+        const tasks = await Task.findAll({
           raw: true,
           where: {
             completed: filterQuery.completed,
