@@ -1,6 +1,8 @@
 import {Request, Response} from 'express'
-import {TaskService} from '../services/tasks'
+import { autoInjectable } from 'tsyringe'
+import {TaskService} from '../services/task.service'
 
+@autoInjectable()
 export class TaskController{
   service: TaskService
   constructor(service: TaskService){
@@ -22,11 +24,9 @@ export class TaskController{
   
    post = async (req : Request, res : Response) => {
     /*
-    {
       "title":"title",
       "dueDate":"2022-05-21",
       "completed":false
-    }
      */
   
     const {error} = await this.service.validatePost(req.body);
@@ -39,11 +39,9 @@ export class TaskController{
   
    put = async (req : Request, res : Response) => {
     /*
-  
     "title":"novi",
     "dueDate":"2023-09-21",
     "completed":true
-  
      */
    
     const {error} = await this.service.validatePut(req.body);

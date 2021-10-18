@@ -1,5 +1,6 @@
-import {Task, ITask} from '../models/Task'
-import {getSchema} from '../schemas/ratios'
+import {Task} from '../models/task.model'
+import {ITask} from '../interfaces/task.interface'
+import {getSchema} from '../schemas/ratio.schema'
 import {Op} from 'sequelize'
 
 export class RatioService {

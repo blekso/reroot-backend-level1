@@ -1,6 +1,8 @@
 import {Request, Response} from 'express'
-import {RatioService} from '../services/ratios'
+import { autoInjectable } from 'tsyringe'
+import {RatioService} from '../services/ratio.service'
 
+@autoInjectable()
 export class RatioController{
   service: RatioService
   constructor(service: RatioService){

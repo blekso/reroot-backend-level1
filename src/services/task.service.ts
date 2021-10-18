@@ -1,5 +1,6 @@
-import {Task, ITask} from '../models/Task'
-import {postSchema, getSchema, putSchema} from '../schemas/tasks'
+import {Task} from '../models/task.model'
+import {ITask} from '../interfaces/task.interface'
+import {postSchema, getSchema, putSchema} from '../schemas/task.schema'
 import {Op} from 'sequelize'
 
 export class TaskService {

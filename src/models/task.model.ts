@@ -1,14 +1,5 @@
 import { Sequelize, sequelize } from '../db'
 
-export interface ITask {
-  id: number,
-  title: string,
-  dueDate: Date,
-  completed: boolean,
-  updatedAt: Date,
-  createdAt: Date
-}
-
 export const Task = sequelize.define("task", {
   id: {
     type: Sequelize.INTEGER,

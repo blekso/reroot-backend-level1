@@ -1,16 +1,15 @@
 import * as express from 'express'
 
-import {RatioController} from '../controllers/ratios'
-import {RatioService} from '../services/ratios'
+import {RatioController} from '../controllers/ratio.controller'
+import {RatioService} from '../services/ratio.service'
 
-import {TaskController} from '../controllers/tasks'
-import {TaskService} from '../services/tasks'
+import {TaskController} from '../controllers/task.controller'
+import {TaskService} from '../services/task.service'
 
-const ratioService = new RatioService();
-const ratioController = new RatioController(ratioService);
+import {container} from 'tsyringe'
 
-const taskService = new TaskService();
-const taskController = new TaskController(taskService);
+const ratioController = container.resolve(RatioController);
+const taskController = container.resolve(TaskController);
 
 export const router = express.Router()
 
