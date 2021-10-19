@@ -1,4 +1,4 @@
-import {Task, ITask} from '../models/task.model'
+import {Task} from '../models/task.model'
 import {postSchema, getSchema, putSchema} from '../schemas/task.schema'
 import {Op} from 'sequelize'
 import { ParsedQs } from 'qs';
@@ -8,11 +8,11 @@ export class TaskService {
         return getSchema.validate(req);
     }
     
-     validatePost = async (req: ITask) => { 
+     validatePost = async (req: any) => { 
         return postSchema.validate(req);
     }
     
-     validatePut = async (req: ITask) => { 
+     validatePut = async (req: any) => { 
         return putSchema.validate(req);
     }
     
@@ -20,7 +20,7 @@ export class TaskService {
     
     //error filter_by_title= cant be empty string
     
-        const tasks: ITask[] = await Task.findAll({
+        const tasks = await Task.findAll({
             raw: true,
             offset: Number(filterQuery.page) * 5,
             limit: 5,
@@ -30,52 +30,53 @@ export class TaskService {
             },
             completed: filterQuery.completed,
             },
-            order: [["dueDate", filterQuery.sort_by_date]],
+            order: [["dueDate", String(filterQuery.sort_by_date)]],
         });
     
        return tasks
     }
     
-     post = async (newTask: ITask) => {
-    
-        try {
-            const task: ITask = await Task.create({
-                title: newTask.title,
-                dueDate: newTask.dueDate,
-                completed: newTask.completed,
-            });
-    
-        return task
-        } catch (err) {
-        return err
-        } 
+     post = async (newTask: any) => {
+            try{
+                const task = await Task.create({
+                    title: newTask.title,
+                    dueDate: newTask.dueDate,
+                    completed: newTask.completed,
+                });
+                return task
+            } catch(err) {
+                throw new Error('Error on create')
+            }
+            
+        
     }
-    put = async (id: string, updatedTask: ITask) => {
+    put = async (id: string, updatedTask: any) => {
 
         //error filter_by_title= cant be empty string
         
         try{
-            const task: ITask = await Task.findOne({
+            const task = await Task.findOne({
                 raw: true,
-                where: { id: id },
+                where: { id },
               })
-          
+              
+
             await Task.update(
             {
-                title: updatedTask.title ?? task!.title,
-                dueDate: updatedTask.dueDate ?? task!.dueDate,
-                completed: updatedTask.completed ?? task!.completed,
+                title: updatedTask.title ? updatedTask.title : task!.title,
+                dueDate: updatedTask.dueDate ? updatedTask.dueDate : task!.dueDate,
+                completed: updatedTask.completed ? updatedTask.completed : task!.completed,
             },
             {
                 where: {
-                id: id,
+                id
                 },
             }
             )
-    
+            
             return `Task with id ${id} is updated`;
         } catch (err) {
-            return err
+            throw new Error(`Task with id ${id} doesnt exist`)
           }
         
     }
@@ -91,7 +92,7 @@ export class TaskService {
         
             return `Task with id ${id} is deleted`;
           } catch (err) {
-            return err
+            throw new Error(`Task with id ${id} doesnt exist`)
           }
     }
 }

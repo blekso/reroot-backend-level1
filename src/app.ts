@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from 'express'
-import {sequelize} from './db'
+import {sequelize} from './db/config'
 import { queryParser } from 'express-query-parser'
 
 const app = express();
