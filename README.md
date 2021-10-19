@@ -39,32 +39,40 @@ npm run start
 App uses two main routes: /api/ratios (localhost:3000/api/ratios) which returns ratios of tasks and /api/tasks (localhost:3000/api/tasks) which returns task objects.
 
 #### /api/ratios GET
+
+Query Parameters:
 ```
-{
-  "completed": false,
-  "expired": false,
-  "get_productivity_ratio": false
-}
+  completed: boolean;
+  expired: boolean;
+  get_productivity_ratio: boolean;
 ```
-Completed: boolean - selects tasks with completed field set to same value\
-Expired: boolean - calculates which tasks' dueDates are in the past time\
-GetProductivityRatio: boolean - returns the ratio of completed tasks in their dueDate\
-Values of fields are required and have to be combined!
+Completed - selects tasks with completed field set to same value\
+Expired - calculates which tasks' dueDates are in the past time\
+GetProductivityRatio - returns the ratio of completed tasks in their dueDate\
+Values of query have to be used in url and are required and have to be combined!
+
+Route example: 
+```
+localhost:3000/api/ratios?completed=false&expired=false&get_productivity_ratio=false
+```
 
 #### /api/tasks GET
 ```
-{
-  "completed": false,
-  "sort_by_date": "desc",
-  "page": 0,
-  "filter_by_title": ""
-}
+  completed: boolean,
+  sort_by_date: string (desc or asc);
+  page: number (0, 1, 2..);
+  filter_by_title: string
 ```
-Completed: boolean - selects tasks with completed field set to same value\
-SortByDate: string (desc/asc) - sorts tasks by their dueDates\
-Page: number - pagination of 5 tasks per page\
-FilterByTitle: string - filtering by name with LIKE %name% operator\
-Values of fields are required and have to be combined!
+Completed - selects tasks with completed field set to same value\
+SortByDate - sorts tasks by their dueDates\
+Page - pagination of 5 tasks per page\
+FilterByTitle - filtering by name with LIKE %name% operator\
+Values of query have to be used in url and are all required except filter_by_title, others have to be combined!
+
+Route example: 
+```
+localhost:3000/api/tasks?completed=false&sort_by_date=desc&page=0&filter_by_title=zadatak1
+```
 
 #### /api/tasks POST
 ```
@@ -74,7 +82,7 @@ Values of fields are required and have to be combined!
   "completed": false
 }
 ```
-Creates new task, all fields are required.  
+Creates new task, all fields are required in req.body.  
 
 #### /api/tasks PUT
 ```
@@ -90,7 +98,7 @@ Requires /:id as req.params.id\
 Atleast one field is needed in order to update the task successfully!
 
 #### /api/tasks DELETE
-Deletes task from table, requires /:id as req.params.id
+Deletes task from table, requires /:id in req.params.id
 
 ### Author
 
