@@ -1,40 +1,31 @@
-import { sequelize } from '../db'
-import { DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, sequelize } from '../db'
 
-interface TaskAttributes {
-  id: number;
-  title: string;
-  dueDate: string;
-  completed: boolean;
-}
-export interface TaskInput extends Optional<TaskAttributes, 'id'> {}
-
-export class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
-  public id!: number
-  public title!: string
-  public dueDate!: string
-  public completed!: boolean
+export interface ITask {
+  id: number,
+  title: string,
+  dueDate: Date,
+  completed: boolean,
+  updatedAt: Date,
+  createdAt: Date
 }
 
-Task.init({
+export const Task = sequelize.define("task", {
   id: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
   title: {
-    type: DataTypes.STRING,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   dueDate: {
-    type: DataTypes.DATE,
+    type: Sequelize.DATE,
     allowNull: false,
   },
   completed: {
-    type: DataTypes.BOOLEAN,
+    type: Sequelize.BOOLEAN,
     allowNull: false,
   },
-}, {
-  sequelize
-})
+});

@@ -47,7 +47,7 @@ export class TaskController{
     const {error} = await this.service.validatePut(req.body);
     if (error) return res.status(400).send(error.details[0].message);
   
-    this.service.put(req)
+    this.service.put(req.params.id, req.body)
       .then((result) => res.status(200).json(result))
       .catch((err) => res.status(400).send(err));
       
@@ -58,7 +58,7 @@ export class TaskController{
     localhost:3000/api/tasks/4
      */
   
-    this.service.delete(req)
+    this.service.delete(req.params.id)
       .then((result) => res.status(200).json(result))
       .catch((err) => res.status(400).send(err));
   };
