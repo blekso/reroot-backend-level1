@@ -1,10 +1,7 @@
 import * as express from 'express'
 
 import {RatioController} from '../controllers/ratio.controller'
-import {RatioService} from '../services/ratio.service'
-
 import {TaskController} from '../controllers/task.controller'
-import {TaskService} from '../services/task.service'
 
 import {container} from 'tsyringe'
 

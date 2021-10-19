@@ -8,7 +8,6 @@ interface TaskAttributes {
   completed: boolean;
 }
 export interface TaskInput extends Optional<TaskAttributes, 'id'> {}
-export interface TaskOutput extends Required<TaskAttributes> {}
 
 export class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
   public id!: number
@@ -37,6 +36,5 @@ Task.init({
     allowNull: false,
   },
 }, {
-  sequelize,
-  tableName: 'tasks'
+  sequelize
 })

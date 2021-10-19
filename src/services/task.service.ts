@@ -1,4 +1,4 @@
-import {Task} from '../models/task.model'
+import {Task, TaskInput} from '../models/task.model'
 import {postSchema, getSchema, putSchema} from '../schemas/task.schema'
 import {Op} from 'sequelize'
 import { ParsedQs } from 'qs';
@@ -8,15 +8,15 @@ export class TaskService {
         return getSchema.validate(req);
     }
     
-     validatePost = async (req: any) => { 
+     validatePost = async (req: TaskInput) => { 
         return postSchema.validate(req);
     }
     
-     validatePut = async (req: any) => { 
+     validatePut = async (req: TaskInput) => { 
         return putSchema.validate(req);
     }
     
-     get = async (filterQuery: ParsedQs) => {
+     get = async (filterQuery: ParsedQs): Promise<Task[]> => {
     
     //error filter_by_title= cant be empty string
     
@@ -36,7 +36,7 @@ export class TaskService {
        return tasks
     }
     
-     post = async (newTask: any) => {
+     post = async (newTask: TaskInput): Promise<Task> => {
             try{
                 const task = await Task.create({
                     title: newTask.title,
@@ -50,9 +50,7 @@ export class TaskService {
             
         
     }
-    put = async (id: string, updatedTask: any) => {
-
-        //error filter_by_title= cant be empty string
+    put = async (id: string, updatedTask: TaskInput): Promise<string> => {
         
         try{
             const task = await Task.findOne({
@@ -81,7 +79,7 @@ export class TaskService {
         
     }
 
-    delete = async (id: string) => {
+    delete = async (id: string): Promise<string> => {
 
         try {
             await Task.destroy({

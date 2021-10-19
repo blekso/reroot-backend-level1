@@ -1,13 +1,14 @@
 import {Task} from '../models/task.model'
 import {getSchema} from '../schemas/ratio.schema'
 import {Op} from 'sequelize'
+import { ParsedQs } from 'qs';
 
 export class RatioService {
-  validateGet = async (req: any) => { 
+  validateGet = async (req: ParsedQs) => { 
     return getSchema.validate(req);
   }
 
-  get = async (filterQuery: any) => {
+  get = async (filterQuery: ParsedQs): Promise<string> => {
 
     if (filterQuery.get_productivity_ratio) {
       const tasks= await Task.findAll({

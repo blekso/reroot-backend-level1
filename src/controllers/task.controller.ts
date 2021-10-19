@@ -9,7 +9,7 @@ export class TaskController{
     this.service = service
   }
 
-   get = async (req : Request, res : Response) => {
+   get = async (req : Request, res : Response): Promise<any> => {
     /*
     localhost:3000/api/tasks?completed=false&sort_by_date=desc&page=0&filter_by_title=zadatak1
      */
@@ -22,7 +22,7 @@ export class TaskController{
       .catch((err) => res.status(400).send(err));
   }
   
-   post = async (req : Request, res : Response) => {
+   post = async (req : Request, res : Response): Promise<any> => {
     /*
       "title":"title",
       "dueDate":"2022-05-21",
@@ -37,7 +37,7 @@ export class TaskController{
       .catch((err) => res.status(400).send(err));
   };
   
-   put = async (req : Request, res : Response) => {
+   put = async (req : Request, res : Response): Promise<any> => {
     /*
     "title":"novi",
     "dueDate":"2023-09-21",
@@ -53,7 +53,7 @@ export class TaskController{
       
   };
   
-   delete = async (req : Request, res : Response) => {
+   delete = async (req : Request, res : Response): Promise<any> => {
     /*
     localhost:3000/api/tasks/4
      */
