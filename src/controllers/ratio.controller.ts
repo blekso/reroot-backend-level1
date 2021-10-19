@@ -13,10 +13,7 @@ export class RatioController{
     /*
     localhost:3000/api/ratios?completed=false&expired=false&get_productivity_ratio=false
       */
-    
-    const {error} = await this.service.validateGet(req.query);
-    if (error) return res.status(400).send(error.details[0].message);
-  
+
     this.service.get(req.query)
     .then((result) => res
       .status(200)

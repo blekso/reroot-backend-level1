@@ -1,25 +1,10 @@
 import {Task, TaskInput} from '../models/task.model'
-import {postSchema, getSchema, putSchema} from '../schemas/task.schema'
 import {Op} from 'sequelize'
 import { ParsedQs } from 'qs';
 
 export class TaskService {
-     validateGet = async (req: ParsedQs) => { 
-        return getSchema.validate(req);
-    }
-    
-     validatePost = async (req: TaskInput) => { 
-        return postSchema.validate(req);
-    }
-    
-     validatePut = async (req: TaskInput) => { 
-        return putSchema.validate(req);
-    }
-    
      get = async (filterQuery: ParsedQs): Promise<Task[]> => {
-    
-    //error filter_by_title= cant be empty string
-    
+
         const tasks = await Task.findAll({
             raw: true,
             offset: Number(filterQuery.page) * 5,
@@ -52,12 +37,11 @@ export class TaskService {
     }
     put = async (id: string, updatedTask: TaskInput): Promise<string> => {
         
-        try{
-            const task = await Task.findOne({
+         try {
+            var task = await Task.findOne({
                 raw: true,
                 where: { id },
-              })
-              
+                })
 
             await Task.update(
             {
@@ -71,10 +55,10 @@ export class TaskService {
                 },
             }
             )
-            
+
             return `Task with id ${id} is updated`;
         } catch (err) {
-            throw new Error(`Task with id ${id} doesnt exist`)
+            throw new Error('Error on update')
           }
         
     }
@@ -90,7 +74,7 @@ export class TaskService {
         
             return `Task with id ${id} is deleted`;
           } catch (err) {
-            throw new Error(`Task with id ${id} doesnt exist`)
+            throw new Error('Error on delete')
           }
     }
 }
