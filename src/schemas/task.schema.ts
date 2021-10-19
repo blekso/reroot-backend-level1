@@ -10,7 +10,7 @@ export const postTaskSchema = {
 
 export const getTaskSchema = {
   [Segments.QUERY]: Joi.object({
-    completed: Joi.boolean(),
+    completed: Joi.boolean().required(),
     sort_by_date: Joi.string().max(4).required(),
     page: Joi.number().required(),
     filter_by_title: Joi.string().empty('').default('')

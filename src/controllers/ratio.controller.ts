@@ -10,10 +10,6 @@ export class RatioController{
   }
 
    get = async (req : Request, res : Response) => {
-    /*
-    localhost:3000/api/ratios?completed=false&expired=false&get_productivity_ratio=false
-      */
-
     this.service.get(req.query)
     .then((result) => res
       .status(200)

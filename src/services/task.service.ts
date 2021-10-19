@@ -22,6 +22,7 @@ export class TaskService {
     }
     
      post = async (newTask: TaskInput): Promise<Task> => {
+         
             try{
                 const task = await Task.create({
                     title: newTask.title,
