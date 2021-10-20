@@ -9,7 +9,7 @@ export class RatioController{
     this.service = service
   }
 
-   get = async (req : Request, res : Response) => {
+   get = async (req : Request, res : Response): Promise<void> => {
     this.service.get(req.query)
     .then((result) => res
       .status(200)
@@ -17,5 +17,4 @@ export class RatioController{
       result
       )).catch((err) => res.status(400).send(err))
     }
-  
 }
