@@ -49,7 +49,7 @@ Query Parameters:
 Completed - selects tasks with completed field set to same value\
 Expired - calculates which tasks' dueDates are in the past time\
 GetProductivityRatio - returns the ratio of completed tasks in their dueDate\
-Values of query have to be used in url and are required and have to be combined!
+Values of query have to be used in url and are required and have to be combined!\
 
 Route example: 
 ```
@@ -57,6 +57,8 @@ localhost:3000/api/ratios?completed=false&expired=false&get_productivity_ratio=f
 ```
 
 #### /api/tasks GET
+
+Query Parameters:
 ```
   completed: boolean,
   sort_by_date: string (desc or asc);
@@ -67,7 +69,7 @@ Completed - selects tasks with completed field set to same value\
 SortByDate - sorts tasks by their dueDates\
 Page - pagination of 5 tasks per page\
 FilterByTitle - filtering by name with LIKE %name% operator\
-Values of query have to be used in url and are all required except filter_by_title, others have to be combined!
+Values of query have to be used in url query and are all required except filter_by_title, others have to be combined!\
 
 Route example: 
 ```
@@ -75,6 +77,18 @@ localhost:3000/api/tasks?completed=false&sort_by_date=desc&page=0&filter_by_titl
 ```
 
 #### /api/tasks POST
+
+Filter Parameters (body):
+```
+{
+  title: string;
+  dueDate: string (year-mm-dd);
+  completed: boolean
+}
+```
+Creates new task, all fields are required in req.body.\
+
+Object example:
 ```
 {
   "title": "title",
@@ -82,23 +96,41 @@ localhost:3000/api/tasks?completed=false&sort_by_date=desc&page=0&filter_by_titl
   "completed": false
 }
 ```
-Creates new task, all fields are required in req.body.  
 
 #### /api/tasks PUT
+
+Filter Parameters (body):
 ```
-/:id
 {
-  "title": "zad4",
-  "dueDate": "2022-05-21",
-  "completed": false,
+  title: string;
+  dueDate: string (year-mm-dd);
+  completed: boolean
 }
 ```
 Updates fields which are set in req.body to the task with the same ID as in req.params.id\
 Requires /:id as req.params.id\
-Atleast one field is needed in order to update the task successfully!
+Atleast one field is needed in order to update the task successfully!\
+
+Route & Object example:
+```
+localhost:3000/api/tasks/14
+```
+```
+{
+  "title": "title",
+  "dueDate": "2022-05-21",
+  "completed": false
+}
+```
 
 #### /api/tasks DELETE
-Deletes task from table, requires /:id in req.params.id
+
+Deletes task from table, requires /:id in req.params.id\
+
+Route example: 
+```
+localhost:3000/api/tasks/14
+```
 
 ### Author
 
